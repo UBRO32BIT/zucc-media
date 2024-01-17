@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import { Navbar } from './components/Navbar';
-import { Main } from './pages/Main';
-import { Login } from './pages/Login';
+import { Main } from './pages/home/Main';
+import { Login } from './pages/auth/Login';
 
 function App() {
   return (
