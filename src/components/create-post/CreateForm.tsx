@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { addDoc, collection } from "firebase/firestore"
+import { addDoc, collection, serverTimestamp } from "firebase/firestore"
 import { auth, db } from "../../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
+import Button from "@mui/joy/Button";
+import { enqueueSnackbar } from "notistack";
+import { Box, Input, Typography } from "@mui/joy";
 interface CreateFormData {
     title: string;
     description: string;
@@ -29,37 +30,41 @@ export const CreateForm = () => {
     const postsRef = collection(db, "posts");
 
     const onCreatePost = async (data: CreateFormData) => {
-        console.log(data);
-        await addDoc(postsRef, {
-            ...data,
-            username: user?.displayName,
-            userId: user?.uid,
-        });
+        try {
+            console.log(data);
+            await addDoc(postsRef, {
+                ...data,
+                username: user?.displayName,
+                userId: user?.uid,
+                createdAt: serverTimestamp()
+            });
+        }
+        catch (error: any) {
+            console.error(error);
+            enqueueSnackbar(`Cannot create a post: ${error.message}`, {  variant: "error" });
+        }
     }
     return (
-        <>
+        <Box>
             <form onSubmit={handleSubmit(onCreatePost)}>
-                <TextField
-                    variant="standard"
-                    label="Title"
+                <Input
+                    size="sm"
                     placeholder="Title..."
                     error={!!errors.title}
-                    helperText={errors.title?.message}
                     {...register("title", { required: "Title is required" })}
                 />
+                {errors.title && <Typography level="body-xs" color="danger">{errors.title.message}</Typography>}
                 <br/>
-                <TextField
-                    variant="filled"
-                    label="Description"
+                <Input
+                    size="sm"
                     placeholder="Description..."
-                    multiline
                     error={!!errors.description}
-                    helperText={errors.description?.message}
                     {...register("description", { required: "Description is required" })}
                 />
+                {errors.description && <Typography level="body-xs" color="danger">{errors.description.message}</Typography>}
                 <br/>
-                <Button type="submit" variant="contained" color="success">Post</Button>
+                <Button type="submit" color="success">Post</Button>
             </form>
-        </>
+        </Box>
     );
 }

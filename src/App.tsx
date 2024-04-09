@@ -4,17 +4,21 @@ import './App.css';
 import { Navbar } from './components/Navbar';
 import { Main } from './pages/home/Main';
 import { Login } from './pages/auth/Login';
+import { SnackbarProvider } from 'notistack';
 
 function App() {
   return (
-    <div className="App">
-      <Router>
-        <Navbar/>
-        <Routes>
-          <Route path="" element={<Main />}/>
-          <Route path="/login" element={<Login/>}/>
-        </Routes>
-      </Router>
+    <div className="">
+      <SnackbarProvider maxSnack={3}>
+        <Router>
+          <Navbar/>
+          <Routes>
+            <Route path="" element={<Main />}/>
+            <Route path="/login" element={<Login/>}/>
+          </Routes>
+        </Router>
+      </SnackbarProvider>
+      
     </div>
   );
 }

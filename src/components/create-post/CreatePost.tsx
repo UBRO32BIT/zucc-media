@@ -1,13 +1,15 @@
+import { Box, Card, Divider, Typography } from "@mui/joy";
 import { CreateForm } from "./CreateForm";
 
 export const CreatePost = () => {
     return (
-        <>
-            <h2>Create a post</h2>
-            <div>
-                <CreateForm/>
-            </div>
-            
-        </>
+
+        <Box width={"100%"}>
+            <Card>
+                <Typography level="h2" textAlign={'center'}>Create a post</Typography>
+                <Divider/>
+                    <CreateForm />
+                </Card>
+        </Box>
     );
 }
